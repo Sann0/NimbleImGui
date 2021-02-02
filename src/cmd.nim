@@ -38,6 +38,7 @@ proc uninstallModule*(m: string) =
   var 
     p = startProcess(cmd.base, "", cmds.uninstall & m, options=opts)
     (_, exCode) = p.readLines()
+    
   if exCode == 0: 
     Log.add("Successfully uninstalled " & m)
   else: 
