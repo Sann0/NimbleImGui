@@ -2,7 +2,7 @@ import nimgl/glfw
 
 type 
   Module* = object
-    name*, url*, descr*, license*, website*: string
+    name*, url*, descr*, license*: string
 
   InstalledModule* = object
     name*, version*: string

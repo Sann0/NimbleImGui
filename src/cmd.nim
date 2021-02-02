@@ -38,7 +38,7 @@ proc uninstallModule*(m: string) =
   var 
     p = startProcess(cmd.base, "", cmds.uninstall & m, options=opts)
     (_, exCode) = p.readLines()
-    
+
   if exCode == 0: 
     Log.add("Successfully uninstalled " & m)
   else: 
@@ -67,7 +67,6 @@ proc parseModules*: seq[Module] =
         of "url": m.url = lnSt[1].replace("(git)", "")
         of "description": m.descr = ln[1].strip()
         of "license": m.license = lnSt[1]
-        of "website": m.website = lnSt[1]
     Log.add("Parsed module list")
   else:
     Log.add("Failed to parse module list")
