@@ -3,6 +3,8 @@ import globals, cmd
 import nimgl/imgui
 
 proc uiLog* =
+  if igButton("Clear"):
+    Log.setLen(0)
   for l in Log:
     igTextUnformatted(l)
   igSetScrollHereY(1.0)
