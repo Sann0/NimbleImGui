@@ -24,14 +24,13 @@ proc init =
   Installed = parseInstalled()
 
   igStyleColorsDark()
-  setAlpha(0.9)
+  setAlpha(0.95)
 
 proc uiLoop =
   var show = true
   igOpenGL3NewFrame()
   igGlfwNewFrame()
   igNewFrame()
-  #igGetStyle().colors[ImGuiCol.ChildBg.int32] = igGetStyle().colors[ImGuiCol.WindowBg.int32]
 
   igBegin("Modules", show.addr)
   uiModules()

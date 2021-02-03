@@ -5,6 +5,10 @@ import nimgl/imgui
 # converter flagToInt32(x: ImGuiWindowFlags): int32 = x.int32
 # converter int32ToFlag(x: int32): ImGuiWindowFlags = x.ImGuiWindowFlags
 
+const
+  debugColor = ImVec4(y: 0.6, z: 1, w: 1)
+  installedColor = ImVec4(y: 1, z: 0.2, w: 1)
+
 proc uiLog* =
   var
     autoscroll {.global.}: bool = true
@@ -16,14 +20,14 @@ proc uiLog* =
   igSameLine()
   igCheckBox("Autoscroll", autoscroll.addr)
   igSameLine()
-  igCheckBox("Debug", debug.addr)
+  igCheckBox("Nimble", debug.addr)
   igBeginChild("scrolling", flags=ImGuiWindowFlags.NoBackground)
   igPushStyleVar(ImguiStyleVar.ItemSpacing, ImVec2(x: 0, y: 1))
   if debug:
     for l in DebugLog:
-      igTextUnformatted(l)
+      igTextColored(debugColor, l)
   for l in Log:
-    igTextUnformatted(l)
+    igTextColored(installedColor, l)
   if autoscroll:
     igSetScrollHereY(1.0)
   igPopStyleVar()
@@ -100,7 +104,7 @@ proc uiModules* =
   igSetNextItemWidth(-1)
   igInputText("##Filter", filterTxt, 50)
   igSeparator()
-  igColumns(3, "columnheader", true)
+  igColumns(3, "moduleheader", true)
   igSetColumnWidth(0, 150)
   igText("Name")
   igNextColumn()
@@ -116,8 +120,13 @@ proc uiModules* =
   igSetColumnWidth(1, 125)
   var filterStr = $filterTxt.cstring
   for i, m in Modules:
+    var installed: bool
     if filterStr.toLower() notin m.name.toLower() and 
     filterStr.toLower() notin m.descr.toLower(): continue
+    for im in Installed:
+      if im.name == m.name:
+        igPushStyleColor(ImGuiCol.Text, installedColor)
+        installed = true
     if igSelectable(m.name, selected == i, flags = ImGuiSelectableFlags.SpanAllColumns):
       selected = i
       selectedMod = m
@@ -126,5 +135,7 @@ proc uiModules* =
     igNextColumn()
     igTextWrapped(m.descr)
     igNextColumn()
+    if installed:
+      igPopStyleColor()
   igSeparator()
   igEndChild()

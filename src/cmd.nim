@@ -13,7 +13,7 @@ const
   )
 
 proc updateModules* =
-  var 
+  var
     p = startProcess(base, "", cmds.update, options=opts)
     (lines, exCode) = p.readLines()
   
