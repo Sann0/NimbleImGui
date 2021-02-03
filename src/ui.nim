@@ -25,7 +25,7 @@ proc uiLog* =
   igPushStyleVar(ImguiStyleVar.ItemSpacing, ImVec2(x: 0, y: 1))
   if debug:
     for l in DebugLog:
-      igTextColored(debugColor, l)
+      igTextColored(debugColor, l.strip())
   for l in Log:
     igTextColored(installedColor, l)
   if autoscroll:
@@ -33,10 +33,11 @@ proc uiLog* =
   igPopStyleVar()
   igEndChild()
 
-proc setAlpha*(v: float32) = 
-  for i, c in igGetStyle().colors:
+proc setAlpha*(v: float32) =
+  var style = igGetStyle()
+  for i, c in style.colors:
     var vec = ImVec4(x: c.x, y: c.y, z: c.z, w: v)
-    igGetStyle().colors[i] = vec
+    style.colors[i] = vec
 
 proc uiInstalledModules* =
   var
@@ -53,6 +54,7 @@ proc uiInstalledModules* =
   if igButton("Reinstall") and selected != -1:
     installModule(selectedMod.name)
     Installed = parseInstalled()
+  igBeginChild("installed", flags = ImGuiWindowFlags.NoBackground)
   igSeparator()
   igColumns(2, "modulelist", true)
   igSetColumnWidth(0, 200)
@@ -65,9 +67,14 @@ proc uiInstalledModules* =
     if igSelectable(m.name, selected == i, flags = ImGuiSelectableFlags.SpanAllColumns):
       selected = i
       selectedMod = m
+    if igIsItemHovered() and igGetCurrentContext().hoveredIdTimer > 0.6:
+      igBeginTooltip()
+      igTextUnformatted(m.descr)
+      igEndTooltip()
     igNextColumn()
     igText(m.version)
     igNextColumn()
+  igEndChild()
 
 proc uiModules* =
   var

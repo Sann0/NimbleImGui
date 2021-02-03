@@ -5,7 +5,7 @@ type
     name*, url*, descr*, license*: string
 
   InstalledModule* = object
-    name*, version*: string
+    name*, version*, descr*: string
 
 var
   Log*: seq[string]
