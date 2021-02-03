@@ -1,5 +1,5 @@
-import globals
 import osproc, strutils
+import globals
 
 const
   base = "nimble"

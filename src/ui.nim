@@ -1,6 +1,6 @@
 import strutils, browsers
-import globals, cmd
 import nimgl/imgui
+import globals, cmd
 
 # converter flagToInt32(x: ImGuiWindowFlags): int32 = x.int32
 # converter int32ToFlag(x: int32): ImGuiWindowFlags = x.ImGuiWindowFlags
