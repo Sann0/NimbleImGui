@@ -23,10 +23,9 @@ proc init =
   assert igGlfwInitForOpenGL(GLFWWin, true)
   assert igOpenGL3Init()
   igGetIO().iniFilename = "gui.ini"
-  nativeStyle()
-
   Modules = parseModules()
   Installed = parseInstalled()
+  setAlpha(0.9)
 
 proc uiLoop =
   var show = true

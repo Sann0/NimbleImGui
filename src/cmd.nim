@@ -79,7 +79,12 @@ proc parseInstalled*: seq[InstalledModule] =
   if exCode == 0:
     for l in lines:
       let ln = l.strip().split()
-      result.add(InstalledModule(name: ln[0], version: ln[2]))
+      result.add(
+        InstalledModule(
+          name: ln[0], 
+          version: ln[2].multiReplace([("[", ""), ("]", "")])
+        )
+      )
     Log.add("Parsed installed module list")
   else:
     Log.add("Failed to parse installed module list")
