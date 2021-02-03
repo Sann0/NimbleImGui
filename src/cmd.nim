@@ -14,9 +14,11 @@ const
 
 proc updateModules* =
   var 
-    p = startProcess(cmd.base, "", cmds.update, options=opts)
-    (_, exCode) = p.readLines()
+    p = startProcess(base, "", cmds.update, options=opts)
+    (lines, exCode) = p.readLines()
   
+  DebugLog.add(lines)
+
   if exCode == 0: 
     Log.add("Successfully updated modules") 
   else: 
@@ -25,8 +27,10 @@ proc updateModules* =
 proc installModule*(m: string) =
   Log.add("Installing " & m)
   var 
-    p = startProcess(cmd.base, "", cmds.install & m, options=opts)
-    (_, exCode) = p.readLines()
+    p = startProcess(base, "", cmds.install & m, options=opts)
+    (lines, exCode) = p.readLines()
+
+  DebugLog.add(lines)
 
   if exCode == 0: 
     Log.add("Successfully (re)installed " & m) 
@@ -36,8 +40,10 @@ proc installModule*(m: string) =
 proc uninstallModule*(m: string) =
   Log.add("Uninstalling " & m)
   var 
-    p = startProcess(cmd.base, "", cmds.uninstall & m, options=opts)
-    (_, exCode) = p.readLines()
+    p = startProcess(base, "", cmds.uninstall & m, options=opts)
+    (lines, exCode) = p.readLines()
+
+  DebugLog.add(lines)
 
   if exCode == 0: 
     Log.add("Successfully uninstalled " & m)
@@ -46,9 +52,11 @@ proc uninstallModule*(m: string) =
 
 proc parseModules*: seq[Module] =
   var 
-    p = startProcess(cmd.base, "", cmds.list, options=opts)
+    p = startProcess(base, "", cmds.list, options=opts)
     (lines, exCode) = p.readLines()
     m: Module
+
+  DebugLog.add(lines)
 
   if exCode == 0:
     for l in lines:
@@ -73,8 +81,10 @@ proc parseModules*: seq[Module] =
 
 proc parseInstalled*: seq[InstalledModule] =
   var 
-    p = startProcess(cmd.base, "", cmds.installed, options=opts)
+    p = startProcess(base, "", cmds.installed, options=opts)
     (lines, exCode) = p.readLines()
+
+  DebugLog.add(lines)
 
   if exCode == 0:
     for l in lines:

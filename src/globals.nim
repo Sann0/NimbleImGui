@@ -9,6 +9,7 @@ type
 
 var
   Log*: seq[string]
+  DebugLog*: seq[string]
   Modules*: seq[Module]
   Installed*: seq[InstalledModule]
   GLFWWin*: GLFWWindow

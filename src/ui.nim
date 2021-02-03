@@ -2,12 +2,32 @@ import strutils, browsers
 import globals, cmd
 import nimgl/imgui
 
+# converter flagToInt32(x: ImGuiWindowFlags): int32 = x.int32
+# converter int32ToFlag(x: int32): ImGuiWindowFlags = x.ImGuiWindowFlags
+
 proc uiLog* =
+  var
+    autoscroll {.global.}: bool = true
+    debug {.global.}: bool
+
   if igButton("Clear"):
     Log.setLen(0)
+    DebugLog.setLen(0)
+  igSameLine()
+  igCheckBox("Autoscroll", autoscroll.addr)
+  igSameLine()
+  igCheckBox("Debug", debug.addr)
+  igBeginChild("scrolling", flags=ImGuiWindowFlags.NoBackground)
+  igPushStyleVar(ImguiStyleVar.ItemSpacing, ImVec2(x: 0, y: 1))
+  if debug:
+    for l in DebugLog:
+      igTextUnformatted(l)
   for l in Log:
     igTextUnformatted(l)
-  igSetScrollHereY(1.0)
+  if autoscroll:
+    igSetScrollHereY(1.0)
+  igPopStyleVar()
+  igEndChild()
 
 proc setAlpha*(v: float32) = 
   for i, c in igGetStyle().colors:
@@ -29,17 +49,14 @@ proc uiInstalledModules* =
   if igButton("Reinstall") and selected != -1:
     installModule(selectedMod.name)
     Installed = parseInstalled()
-
   igSeparator()
   igColumns(2, "modulelist", true)
-  igSetColumnWidth(0, 130)
+  igSetColumnWidth(0, 200)
   igText("Name")
   igNextColumn()
-  igSetColumnWidth(1, 130)
   igText("Version")
   igNextColumn()
   igSeparator()
-
   for i, m in Installed:
     if igSelectable(m.name, selected == i, flags = ImGuiSelectableFlags.SpanAllColumns):
       selected = i
@@ -52,7 +69,7 @@ proc uiModules* =
   var
     filterTxt {.global.} = " "
     selected {.global.} = -1
-    selectedMod {.global.} : Module
+    selectedMod {.global.}: Module
     style {.global.} = igStyleColorsDark
     transparency {.global.}: float32 = 0.9
 
@@ -67,10 +84,11 @@ proc uiModules* =
   if igButton("Website") and selected != -1:
     Log.add("Visiting " & selectedMod.url)
     openDefaultBrowser(selectedMod.url)
-
+  igSameLine()
+  igDummy(ImVec2(x: 200))
   igSameLine()
   igText("Style:")
-  igSameLine()  
+  igSameLine()
   if igButton(if style == igStyleColorsDark: "Light" else: "Dark"):
     style = if style == igStyleColorsDark: igStyleColorsLight else: igStyleColorsDark
     style()
@@ -82,16 +100,20 @@ proc uiModules* =
   igSetNextItemWidth(-1)
   igInputText("##Filter", filterTxt, 50)
   igSeparator()
-  igColumns(3, "modulelist", true)
-  igSetColumnWidth(0, 130)
+  igColumns(3, "columnheader", true)
+  igSetColumnWidth(0, 150)
   igText("Name")
   igNextColumn()
-  igSetColumnWidth(1, 130)
+  igSetColumnWidth(1, 125)
   igText("License") 
   igNextColumn()
   igText("Description")
-  igNextColumn()
   igSeparator()
+  igEndColumns()
+  igBeginChild("modules", flags=ImGuiWindowFlags.NoBackground)
+  igColumns(3, "modulelist", true)
+  igSetColumnWidth(0, 142)
+  igSetColumnWidth(1, 125)
   var filterStr = $filterTxt.cstring
   for i, m in Modules:
     if filterStr.toLower() notin m.name.toLower() and 
@@ -102,5 +124,7 @@ proc uiModules* =
     igNextColumn()
     igText(m.license)
     igNextColumn()
-    igText(m.descr)
+    igTextWrapped(m.descr)
     igNextColumn()
+  igSeparator()
+  igEndChild()

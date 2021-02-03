@@ -1,10 +1,7 @@
 import ui, cmd, globals
-
 import nimgl/[glfw, opengl, imgui]
 import nimgl/imgui/[impl_opengl, impl_glfw]
 
-converter flagToInt32(x: ImGuiWindowFlags): int32 = x.int32
-converter int32ToFlag(x: int32): ImGuiWindowFlags = x.ImGuiWindowFlags
 
 proc init =
   assert glfwInit()
@@ -25,6 +22,8 @@ proc init =
   igGetIO().iniFilename = "gui.ini"
   Modules = parseModules()
   Installed = parseInstalled()
+
+  igStyleColorsDark()
   setAlpha(0.9)
 
 proc uiLoop =
@@ -32,6 +31,7 @@ proc uiLoop =
   igOpenGL3NewFrame()
   igGlfwNewFrame()
   igNewFrame()
+  #igGetStyle().colors[ImGuiCol.ChildBg.int32] = igGetStyle().colors[ImGuiCol.WindowBg.int32]
 
   igBegin("Modules", show.addr)
   uiModules()
