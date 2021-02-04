@@ -46,7 +46,6 @@ proc uiLoop =
 
   igRender()
   igOpenGL3RenderDrawData(igGetDrawData())
-  echo igGetIO().iniFilename
   if not show: 
     GLFWWin.setWindowShouldClose(true)
 
