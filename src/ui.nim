@@ -96,6 +96,8 @@ proc uiModules* =
     Log.add("Visiting " & selectedMod.url)
     openDefaultBrowser(selectedMod.url)
   igSameLine()
+  igText("Modules: " & $len(Modules))
+  igSameLine()
   igDummy(ImVec2(x: 200))
   igSameLine()
   igText("Style:")
