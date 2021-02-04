@@ -20,13 +20,11 @@ proc init =
   igCreateContext()
   assert igGlfwInitForOpenGL(GLFWWin, true)
   assert igOpenGL3Init()
-  igGetIO().iniFilename = joinPath(splitFile(paramStr(0)).dir, "gui.ini")
-  echo igGetIO().iniFilename
   Modules = parseModules()
   Installed = parseInstalled()
-
   igStyleColorsDark()
   setAlpha(0.95)
+  igGetIO().iniFilename = joinPath(splitFile(paramStr(0)).dir, "gui.ini")
 
 proc uiLoop =
   var show = true
