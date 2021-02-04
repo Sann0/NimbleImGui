@@ -5,7 +5,7 @@ author        = "Meow"
 description   = "ImGui Frontend for Nimble"
 license       = "MIT"
 srcDir        = "src"
-bin           = @["main"]
+bin           = @["NimbleImGui"]
 
 
 # Dependencies
