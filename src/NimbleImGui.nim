@@ -1,4 +1,4 @@
-import os
+import os, strutils
 import nimgl/[glfw, opengl, imgui]
 import nimgl/imgui/[impl_opengl, impl_glfw]
 import ui, cmd, globals
@@ -20,8 +20,7 @@ proc init =
   igCreateContext()
   assert igGlfwInitForOpenGL(GLFWWin, true)
   assert igOpenGL3Init()
-  igGetIO().iniFilename = $joinPath(splitFile(paramStr(0)).dir, "gui.ini")
-  echo igGetIO().iniFilename
+  igGetIO().iniFilename = $joinPath(splitFile(paramStr(0)).dir, "gui.ini").multireplace(("\\", "\\\\"), ("/", "//"))
   Modules = parseModules()
   Installed = parseInstalled()
 
